@@ -1,0 +1,71 @@
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+
+# Main menu buttons
+def main_menu(update: Update, context: CallbackContext) -> None:
+    keyboard = [
+        [InlineKeyboardButton("Home", callback_data='home')],
+        [InlineKeyboardButton("Leaderboard", callback_data='leaderboard')],
+        [InlineKeyboardButton("Rewards", callback_data='rewards')],
+        [InlineKeyboardButton("Friends", callback_data='friends')],
+        [InlineKeyboardButton("Earn", callback_data='earn')]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text("Welcome to ROSE Bot! Select an option:", reply_markup=reply_markup)
+
+# Home page
+def home(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="🏠 Home Page\nWelcome to the app!")
+
+# Leaderboard page
+def leaderboard(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="🏆 Leaderboard\nView top users and rankings.")
+
+# Rewards page
+def rewards(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    # Add task examples
+    tasks = [
+        InlineKeyboardButton("Follow Instagram (+100 ROSE)", url='https://instagram.com'),
+        InlineKeyboardButton("Subscribe YouTube (+200 ROSE)", url='https://youtube.com')
+    ]
+    reply_markup = InlineKeyboardMarkup.from_column(tasks)
+    query.edit_message_text(text="🎁 Rewards\nComplete tasks to earn ROSE.", reply_markup=reply_markup)
+
+# Friends page
+def friends(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="👥 Friends\nInvite friends and earn bonuses!")
+
+# Earn page
+def earn(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="💰 Earn\nExplore ways to earn ROSE!")
+
+# Main function
+def main():
+    # Add your bot token here
+    TOKEN = "YOUR_BOT_TOKEN"
+
+    updater = Updater(TOKEN)
+    dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(CommandHandler('start', main_menu))
+    dispatcher.add_handler(CallbackQueryHandler(home, pattern='home'))
+    dispatcher.add_handler(CallbackQueryHandler(leaderboard, pattern='leaderboard'))
+    dispatcher.add_handler(CallbackQueryHandler(rewards, pattern='rewards'))
+    dispatcher.add_handler(CallbackQueryHandler(friends, pattern='friends'))
+    dispatcher.add_handler(CallbackQueryHandler(earn, pattern='earn'))
+
+    updater.start_polling()
+    updater.idle()
+
+if name == 'main':
+    main()
